@@ -204,6 +204,21 @@ jobs:
           meson install -C builddir --destdir staging/
           tree ./staging
 
+  meson-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install packages
+        run: pip install --pre meson
+      - name: Initialize the MSVC dev command prompt
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build with Meson
+        run: |
+          meson setup build/meson/ builddir/ -Dbin_tests=true
+          ninja -C builddir/
+          meson test -C builddir/ --print-errorlogs
+          meson install -C builddir --destdir staging/
+
   cmake-visual-2019:
     runs-on: windows-2019
     strategy:
